@@ -1,7 +1,7 @@
 {
-  "name": "template-reverse",
+  "name": "tmplrev",
   "version": "1.0.0",
-  "description": "",
+  "description": "Detect placeholders by comparing two lists and extract interested values",
   "main": "lib/tmplrev.js",
   "watch": {
     "build": {
