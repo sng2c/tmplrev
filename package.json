@@ -1,0 +1,35 @@
+{
+  "name": "template-reverse",
+  "version": "1.0.0",
+  "description": "",
+  "main": "lib/tmplrev.js",
+  "watch": {
+    "build": {
+      "patterns": [
+        "src",
+        "test"
+      ],
+      "extensions": "coffee"
+    }
+  },
+  "scripts": {
+    "test": "nodeunit test/*.js",
+    "build": "coffee -o lib/ -c src/ && coffee -c test/test.coffee",
+    "postbuild": "npm run test",
+    "watch": "npm-watch build"
+  },
+  "author": "sng2c",
+  "license": "ISC",
+  "dependencies": {
+    "amdefine": "^1.0.1",
+    "difflib": "^0.2.4",
+    "underscore": "^1.9.1"
+  },
+  "devDependencies": {
+    "requirejs": "^2.3.6",
+    "coffee-script": "^1.12.7",
+    "coffeescript": "^2.3.2",
+    "nodeunit": "^0.11.3",
+    "npm-watch": "latest"
+  }
+}
