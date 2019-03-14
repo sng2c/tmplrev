@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<script type="text/javascript" src=""></script>
+	<script src="third/require.js"></script>
+</head>
+<body>
+	<script type="text/javascript">
+		'use strict';
+		require.config({
+		    paths: {
+		        tmplrev: '../lib/tmplrev',
+		        underscore: './third/underscore',
+		        difflib: './third/difflib',
+		        flex: './third/flex',
+		        lexer: './third/lexer',
+		        jquery: 'http://code.jquery.com/jquery-3.3.1.slim'
+		    },
+		    shim: {
+            	'difflib': {
+                	exports: 'window.difflib' 
+            	},
+            	'lexer': {
+            		exports: 'Lexer'
+            	},
+            	'jquery': {
+            		exports: '$'
+            	}
+        	}
+		});
+
+		require(['tmplrev','flex','lexer', 'jquery'], function(tmplrev, Flex, Lexer, $){
+
+			window.tmplrev = tmplrev;
+			window.Flex = Flex;
+			window.Lexer = Lexer;
+			window.$ = $;
+
+			init();
+
+			let aa = 'http://kakaobank.com 에 방문하시고 5,000원 받아가세요~';
+			let bb = 'http://mabook.com 에 방문하시고 1,000원 받아가세요~';
+			let cc = 'http://blog.gslump.com 에 방문하시고 600원 받아가세요~';
+		
+
+			{
+				let ret;
+				let lexer = new Lexer( char => { throw new Error(`Unexpected character at row "${char}"`);});
+				lexer.addRule(/[0-9,\.]+/, text => ({'token':'NUM','text':text}) );
+				lexer.addRule(/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&\/\/=]*)/, text => ({'token':'URL','text':text}) );
+				lexer.addRule(/[^\d\s!@#\$%\^&\*\(\)\-=_\{\}\[\]\\|;':",.\/<>\?]+/, text => ({'token':'WORD','text':text}) );
+				lexer.addRule(/[!@#\$%\^&\*\(\)\-=_\{\}\[\]\\|;':",.\/<>\?]/, text => ({'token':'PUNCT','text':text}) );
+				lexer.addRule(/\s/, text => undefined);
+
+				lexer.setInput(aa)
+				let a = [];
+				while((ret = lexer.lex())!==undefined){
+					console.log(ret)
+					a.push(ret.text);
+				}
+				console.log("a:",a);
+				
+				lexer.setInput(bb)
+				let b = [];
+				while((ret = lexer.lex())!==undefined){
+					console.log(ret)
+					b.push(ret.text);
+				}
+				console.log("b:",b);
+
+				let pats = tmplrev.detect(a,b);
+				
+				let rules = {
+					'URL':pats[0],
+					'OFFER':pats[1]
+				}
+
+				for( let idx in rules ){
+					console.log(idx, ' pat :', rules[idx]);	
+				}
+
+				lexer.setInput(cc)
+				let c = [];
+				while((ret = lexer.lex())!==undefined){
+					console.log(ret)
+					c.push(ret.text);
+				}
+				console.log("c:",c);
+
+				for (let k in rules){
+
+					let pat = rules[k];
+					let out = tmplrev.extract(pat, c);
+					console.log(`${k} : ${out}`);
+				}
+			}
+
+		});	
+	</script>
+	<script type="text/javascript">
+		'use strict';
+
+		function lex(text){
+			let lexer = new Lexer( char => { throw new Error(`Unexpected character at row "${char}"`);});
+			lexer.addRule(/[0-9,\.]+/, text => ({'token':'NUM','text':text}) );
+			lexer.addRule(/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&\/\/=]*)/, text => ({'token':'URL','text':text}) );
+			lexer.addRule(/[^\d\s!@#\$%\^&\*\(\)\-=_\{\}\[\]\\|;':",.\/<>\?]+/, text => ({'token':'WORD','text':text}) );
+			lexer.addRule(/[!@#\$%\^&\*\(\)\-=_\{\}\[\]\\|;':",.\/<>\?]/, text => ({'token':'PUNCT','text':text}) );
+			lexer.addRule(/\s/, text => undefined);
+
+			lexer.setInput(text)
+
+			let ret;
+			let lexed = [];
+			while((ret = lexer.lex())!==undefined){
+				lexed.push(ret.text);
+			}
+			return lexed;
+		}
+		function init(){
+			$(function(){
+				$('#detect').click(()=>{
+					let a = lex($('#input1').val());
+					let b = lex($('#input2').val());
+					let sidelen = parseInt($('#sidelen').val());
+					console.log(a,b)
+					let pats = tmplrev.detect(a,b, sidelen);
+					window.pats = pats;
+
+					function replacer(key, value) {
+					  if (typeof value === "symbol") {
+					    return value.toString();
+					  }
+					  return value;
+					}
+					
+					$('#pat').text(JSON.stringify(pats, replacer));
+				});
+				$('#extract').click(()=>{
+					let c = lex($('#input3').val());
+					
+					let output = '';
+					for (let k in pats){
+						let pat = pats[k];
+						let out = tmplrev.extract(pat, c);
+						output += `${k} : ${out.join('')}\n`;
+					}
+
+					$('#output').html(output);
+				
+				});
+			})
+
+		}
+	</script>
+<div>입력1 <input id="input1" type="" name="" value="LIVE OR DIE, THAT'S QUESTION!"></div>
+<div>입력2 <input id="input2" type="" name="" value="EAT OR FAST, THAT'S QUESTION!"></div>
+<div>sidelen <input id="sidelen" type="" name="" value="10"></div>
+<div><button id="detect">패턴인식</button></div>
+<pre id="pat">
+	
+</pre>
+<div>입력3 <input id="input3" type="" name="" value="{1} OR {2}, THAT'S QUESTION!"></div>
+<div><button id="extract">추출</button></div>
+<pre id="output">
+	
+</pre>
+</body>
+</html>
