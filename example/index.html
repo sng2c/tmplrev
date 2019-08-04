@@ -1,8 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta charset="UTF-8">
 	<title></title>
+	<!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
 	<script type="text/javascript" src=""></script>
 	<script src="third/require.js"></script>
 </head>
@@ -155,17 +161,61 @@
 
 		}
 	</script>
-<div>입력1 <input id="input1" type="" name="" value="LIVE OR DIE, THAT'S QUESTION!"></div>
-<div>입력2 <input id="input2" type="" name="" value="EAT OR FAST, THAT'S QUESTION!"></div>
-<div>sidelen <input id="sidelen" type="" name="" value="10"></div>
-<div><button id="detect">패턴인식</button></div>
-<pre id="pat">
+	<div class="container">
+		<form >
+	  		<div class="form-group">
+	  			<label>Input 1</label>
+	  			<input class="form-control" id="input1" type="text" name="" value="LIVE OR DIE, THAT'S QUESTION!">	
+	  		</div>
+	  		<div class="form-group">
+	  			<label>Input 2</label>
+	  			<input class="form-control" id="input2" type="text" name="" value="EAT OR FAST, THAT'S QUESTION!">	
+	  		</div>
+	  		<div class="form-group">
+	  			<label>Side Length</label>
+	  			<input class="form-control" id="sidelen" type="number" name="" value="10">
+	  		</div>
+	  		<button type="button" id="detect" class="btn btn-primary">Detect Pattern</button>
+
+	  		
+	  	</form>
+
+	  	<div class="card" style="margin-top:1rem;">
+	  		<div class="card-header">
+			  Pattern
+			  </div>
+			<div class="card-body">
+				<pre class="" id="pat">
+				</pre>
+			</div>
+		</div>
+  		
+  		<form >
+	  		<div class="form-group">
+	  			<label>Input 3</label>
+	  			<input class="form-control" id="input3" type="text" name="" value="{1} OR {2}, THAT'S QUESTION!">	
+	  		</div>
+	  		<button type="button" id="extract" class="btn btn-primary">Extract Token</button>
+	  	</form>
+
+		<div class="card" style="margin-top:1rem;">
+	  		<div class="card-header">
+			  Tokens
+			  </div>
+			<div class="card-body">
+				<pre class="" id="output">
+				</pre>
+			</div>
+		</div>
+  		
+	</div>
+	
 	
 </pre>
-<div>입력3 <input id="input3" type="" name="" value="{1} OR {2}, THAT'S QUESTION!"></div>
-<div><button id="extract">추출</button></div>
-<pre id="output">
-	
-</pre>
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
 </body>
 </html>
