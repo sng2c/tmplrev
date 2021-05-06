@@ -23,7 +23,7 @@
   "dependencies": {
     "amdefine": "^1.0.1",
     "difflib": "^0.2.4",
-    "underscore": "^1.9.1"
+    "underscore": "^1.12.1"
   },
   "devDependencies": {
     "requirejs": "^2.3.6",
